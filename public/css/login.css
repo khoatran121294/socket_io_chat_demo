@@ -1,0 +1,50 @@
+body {
+    margin : 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+#wrapper{
+    margin : 0 auto;
+    width : 100%;
+}
+
+    #header{
+        margin: 0 auto;
+        width : 70%;
+        min-height: 150px;
+        text-align: center;
+        line-height : 150px;    
+        border-bottom: 1px solid black;
+    }
+    #title{
+        font-size: 30px;
+    }
+    #body {
+        width : 100%;
+         min-height: 400px;
+         text-align: center;
+    }
+    #body table {
+        margin: 0 auto;
+        margin-top : 50px;
+    }
+    #body table tr td{
+        padding-bottom: 20px;
+    }
+    #txtUsername {
+        width : 400px;
+        height : 40px;
+        font-size : 25px;
+        border: 1px solid black;
+        text-align: center;
+    }
+    #btnLogin {
+        width : 200px;
+        height: 50px;
+        background-color: #ffffff;
+        border: 1px solid black;
+        font-size: 20px;
+    }
+    .error {
+        color : red;
+        font-style: italic;
+    }

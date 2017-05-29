@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<HTML>
+    <head>
+        <title>CHATTING</title>
+        <link rel="stylesheet" href="/css/home.css" />
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <label id="title">CHAT ROOM</label>
+            </div>
+            <div id="body">
+                <div id="user-list">
+                    <span class="text-center">
+                        <label>User is online</label>
+                        <hr/>
+                    </span>
+                    <ul id="ulUsers">
+                    </ul>
+                </div>
+                <div id="chatting-form">
+                    <form id="frmChat">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label>Hello, <%=user.name %></label>
+                                    <a href="/login">Logout</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" id="txtMessage" placeholder="Let say something ..." required="required" />
+                                    <input type="submit" id="btnSend" value="Send" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="divMessages">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="divStatusPressing">
+                                    </div>
+                                </td>
+                            </tr>
+                    </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var CURRENT_USERNAME = "<%=user.name %>";
+        $(document).ready(function($){
+            
+            //send info to server
+            socket.emit("send_user_info", {
+                id : socket.id,
+                name : '<%=user.name %>'
+            });
+
+            //get show_message_new_user_join event from server
+            socket.on("show_message_new_user_join", function(user){
+                $("#divMessages").append(
+                    '<label style="margin-left : 20px;"><i><b>' 
+                    + user.name 
+                    + '</b> is joining in room.</i></label><br/>'
+                );
+            });
+
+            //get send_all_users_in_room evente from server
+            socket.on("send_all_users_in_room", function(users_in_room){
+                $("#ulUsers").html('');
+                users_in_room.forEach(function(username, index){
+                    $("#ulUsers").append(
+                        '<ul>' + username + '</ul>'
+                    );
+                });
+            });
+
+            //get show_message_user_out from server
+            socket.on("show_message_user_out", function(user){
+                $("#divMessages").append(
+                    '<label style="margin-left : 20px;"><i><b>' 
+                    + user.name 
+                    + '</b> left room.</i></label><br/>'
+                );
+            });
+
+            //get send_chat_message from server
+            socket.on("send_chat_message", function(data){
+                if(CURRENT_USERNAME == data.user.name){
+                    $("#divMessages").append(
+                        '<label><b>ME : </b> ' + data.message + '</label><br/>'
+                    );
+                }
+                else{
+                    $("#divMessages").append(
+                        '<label><b>' + data.user.name + ' : </b> ' + data.message + '</label><br/>'
+                    );
+                }
+            });
+
+            // get user_is_pressing from server
+            socket.on("user_is_pressing", function(usersIsPressing){
+                $("#divStatusPressing").html("");
+
+                if(usersIsPressing.length == 0){
+                    return;
+                }
+
+                const _index = usersIsPressing.indexOf(CURRENT_USERNAME);
+                if(_index >= 0){
+                    usersIsPressing.splice(_index, 1);
+                }
+                if(usersIsPressing.length > 0){
+                    $("#divStatusPressing").append(
+                        '<label><b>' + usersIsPressing + ' : </b> is typing ...</label><br/>'
+                    );
+                }
+            });
+
+            $("#frmChat").on("submit", function(e){
+                e.preventDefault();
+                const message = $("#txtMessage").val();
+                
+                //send chat message to server
+                socket.emit("send_chat_message", message);
+
+                $("#txtMessage").val('');
+            });
+
+            $("#txtMessage").on("keyup", function(){
+                if(!this.value){
+                    //send flag to notify server this user is entering
+                    socket.emit("user_is_pressing", false);
+                }
+                else{
+                    socket.emit("user_is_pressing", true);
+                }
+            });
+        });
+    </script>
+    </body>
+</HTML>

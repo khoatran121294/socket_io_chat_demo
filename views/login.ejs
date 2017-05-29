@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<HTML>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="./css/login.css" />
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <label id="title">LOGIN</label>
+            </div>
+            <div id="body">
+                <form id="frmLogin">
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="text" id="txtUsername" placeholder="What your name ?" required="required" /><br/>
+                                <% if(locals.error) {%>
+                                    <label class="error"><%=error %></label>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="submit" value="GO CHATTING" id="btnLogin" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#frmLogin").on("submit", function(e){
+                e.preventDefault();
+                const username = $("#txtUsername").val();
+                location.href = "/home/" + username;
+            });
+        });
+    </script>
+    </body>
+</HTML>

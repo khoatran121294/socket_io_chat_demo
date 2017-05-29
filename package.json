@@ -1,0 +1,16 @@
+{
+  "name": "chatting_demo",
+  "version": "1.0.0",
+  "description": "demo a complete chat application using socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "khoata",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
+    "socket.io": "^2.0.1"
+  }
+}
