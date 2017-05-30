@@ -14,9 +14,9 @@ app.set("views", "./views");
 app.get(["/", "/login"], function(req, res){
     const failCode = req.query.fail;
     if(failCode == 1){
-        res.render("login", {error : "Username is existing in room, please choose others."});
+        return res.render("login", {error : "Username is existing in room, please choose others."});
     }
-    res.render("login");
+    return res.render("login");
 });
 
 app.get('/home/:username', function(req, res){
@@ -42,6 +42,9 @@ io.on("connection", function(socket){
     console.log("[LOG] - new socket is connected : " + socket.id);
 
     socket.on("disconnect", function(){
+        if( !socket.user ){
+            return;
+        }
         let _index = users_in_room.indexOf(socket.user.name);
         users_in_room.splice(_index, 1);
         socket.broadcast.emit("show_message_user_out", socket.user);

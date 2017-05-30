@@ -103,6 +103,7 @@
                         '<label><b>' + data.user.name + ' : </b> ' + data.message + '</label><br/>'
                     );
                 }
+                scrollToBottom();
             });
 
             // get user_is_pressing from server
@@ -144,6 +145,11 @@
                 }
             });
         });
+
+        function scrollToBottom(){
+            var divMessages = document.getElementById("divMessages");
+            divMessages.scrollTop = divMessages.scrollHeight;
+        }
     </script>
     </body>
 </HTML>
